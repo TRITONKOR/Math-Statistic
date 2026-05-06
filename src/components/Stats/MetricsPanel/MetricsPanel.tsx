@@ -1,19 +1,12 @@
 import type { FC } from "react";
+import type { Metrics } from "../../../types/statistics";
 import "./metricsPanel.scss";
 
 export interface MetricsPanelProps {
-    mode: number;
-    median: number;
-    std: number;
-    moment: number;
+    metrics: Metrics;
 }
 
-export const MetricsPanel: FC<MetricsPanelProps> = ({
-    mode,
-    median,
-    std,
-    moment,
-}) => {
+export const MetricsPanel: FC<MetricsPanelProps> = ({ metrics }) => {
     return (
         <div className="metrics-panel ui-card">
             <h3>Характеристики</h3>
@@ -21,19 +14,27 @@ export const MetricsPanel: FC<MetricsPanelProps> = ({
             <div className="metrics-panel__grid">
                 <p>
                     <span>Мода</span>
-                    <strong>{mode}</strong>
+                    <strong>{metrics.mode.join(", ")}</strong>
                 </p>
                 <p>
                     <span>Медіана</span>
-                    <strong>{median}</strong>
+                    <strong>{metrics.median}</strong>
+                </p>
+                <p>
+                    <span>Математичне сподівання</span>
+                    <strong>{metrics.mean}</strong>
+                </p>
+                <p>
+                    <span>Дисперсія</span>
+                    <strong>{metrics.variance}</strong>
                 </p>
                 <p>
                     <span>СКВ</span>
-                    <strong>{std}</strong>
+                    <strong>{metrics.std}</strong>
                 </p>
                 <p>
                     <span>Початковий момент</span>
-                    <strong>{moment}</strong>
+                    <strong>{metrics.rawMoment}</strong>
                 </p>
             </div>
         </div>

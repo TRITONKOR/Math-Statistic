@@ -7,16 +7,33 @@ import { MainMenu } from "../../components/Menu/MainMenu/MainMenu";
 import { DistributionTable } from "../../components/Stats/DistributionTable/DistributionTable";
 import { MetricsPanel } from "../../components/Stats/MetricsPanel/MetricsPanel";
 import { VariationSeries } from "../../components/Stats/VariationSeries/VariationSeries";
+
+import { buildDistributionRows } from "../../utils/helper";
+
+import type { StatisticsResult, TextOption } from "../../types/statistics";
+
+import { processNumbers, processText } from "../../services/statisticsService";
 import "./homePage.scss";
 
 interface StartOptions {
-    mode: string;
-    textOption: string;
+    mode: "numbers" | "text";
+    textOption: TextOption;
 }
 
 export default function Home() {
     const [config, setConfig] = useState<StartOptions | null>(null);
-    const [data, setData] = useState<string | null>(null);
+    const [data, setData] = useState<StatisticsResult | null>(null);
+
+    const handleSubmit = (input: string) => {
+        if (!config) return;
+
+        const result =
+            config.mode === "numbers"
+                ? processNumbers(input)
+                : processText(input, config.textOption);
+
+        setData(result);
+    };
 
     if (!config) {
         return <MainMenu onStart={(options) => setConfig(options)} />;
@@ -24,9 +41,9 @@ export default function Home() {
 
     if (!data) {
         return config.mode === "numbers" ? (
-            <NumberInput onSubmit={(value) => setData(value)} />
+            <NumberInput onSubmit={handleSubmit} />
         ) : (
-            <TextInput onSubmit={(value) => setData(value)} />
+            <TextInput onSubmit={handleSubmit} />
         );
     }
 
@@ -43,32 +60,57 @@ export default function Home() {
             </div>
 
             <div className="home-page-grid">
-                <VariationSeries data={[]} />
+                <VariationSeries data={data.variationSeries} />
 
                 <div>
-                    <DistributionTable distributionType="frequency" rows={[]} />
+                    <DistributionTable
+                        distributionType="frequency"
+                        rows={buildDistributionRows(
+                            data.distribution,
+                            "frequency",
+                        )}
+                    />
 
                     <DistributionTable
                         distributionType="relative-frequency"
-                        rows={[]}
+                        rows={buildDistributionRows(
+                            data.distribution,
+                            "relative-frequency",
+                        )}
                     />
 
                     <DistributionTable
                         distributionType="cumulative-frequency"
-                        rows={[]}
+                        rows={buildDistributionRows(
+                            data.distribution,
+                            "cumulative-frequency",
+                        )}
                     />
 
                     <DistributionTable
                         distributionType="relative-cumulative-frequency"
-                        rows={[]}
+                        rows={buildDistributionRows(
+                            data.distribution,
+                            "relative-cumulative-frequency",
+                        )}
                     />
                 </div>
 
-                <FrequencyPolygon data={[]} />
+                <FrequencyPolygon
+                    data={data.distribution.value.map((value, i) => ({
+                        value,
+                        freq: data.distribution.freq[i],
+                    }))}
+                />
 
-                <EmpiricalFunctionChart data={[]} />
+                <EmpiricalFunctionChart
+                    data={data.distribution.value.map((value, i) => ({
+                        value,
+                        relCumFreq: data.distribution.relCumFreq[i],
+                    }))}
+                />
 
-                <MetricsPanel mode={0} median={0} std={0} moment={0} />
+                <MetricsPanel metrics={data.metrics} />
             </div>
         </div>
     );
