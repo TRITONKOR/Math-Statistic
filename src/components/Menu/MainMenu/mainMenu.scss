@@ -1,0 +1,61 @@
+.menu {
+	display: grid;
+	gap: 18px;
+	width: min(660px, 100%);
+	padding: 28px;
+	margin: 4vh auto;
+}
+
+.menu-title {
+	font-size: clamp(28px, 4.3vw, 44px);
+}
+
+
+.menu-subtitle {
+	margin: 0;
+	color: var(--text-soft);
+}
+
+.menu-modes {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.menu-mode {
+	display: inline-flex;
+	gap: 8px;
+	align-items: center;
+	padding: 10px 14px;
+	font-weight: 600;
+	background: #ffffff;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+}
+
+.menu-mode input {
+	accent-color: var(--primary);
+}
+
+.menu-text-options {
+	display: grid;
+	gap: 8px;
+}
+
+.menu-text-options h3 {
+	font-family: Manrope, "Segoe UI", sans-serif;
+	font-size: 16px;
+}
+
+.menu-select {
+	padding: 10px;
+	background: #ffffff;
+	border: 1px solid var(--line);
+	border-radius: 10px;
+}
+
+@media (width <= 700px) {
+	.menu {
+		padding: 18px;
+	}
+}

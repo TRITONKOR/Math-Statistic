@@ -1,0 +1,43 @@
+.distribution-table {
+	display: grid;
+	gap: 12px;
+	padding: 20px;
+}
+
+.distribution-table h3 {
+	font-size: 24px;
+}
+
+.distribution-table-scroll {
+	overflow-x: auto;
+}
+
+.distribution-table table {
+	width: 100%;
+	min-width: 420px;
+	overflow: hidden;
+	border-collapse: collapse;
+	background: #ffffff;
+	border-radius: 12px;
+}
+
+.distribution-table th,
+.distribution-table td {
+	padding: 10px 12px;
+	text-align: center;
+	border-bottom: 1px solid var(--line);
+}
+
+.distribution-table th {
+	color: var(--primary-strong);
+	background: #e8f4f2;
+}
+
+.distribution-table th[scope="row"] {
+	min-width: 110px;
+	font-weight: 800;
+}
+
+.distribution-table tr:last-child td {
+	border-bottom: 0;
+}
