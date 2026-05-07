@@ -1,12 +1,15 @@
 import { useState, type FC } from "react";
+import type { TextOption } from "../../../types/statistics";
 import "./textInput.scss";
 
 export interface TextInputProps {
-    onSubmit: (value: string) => void;
+    textOption: TextOption;
+    onSubmit: (value: string, customValue?: string) => void;
 }
 
-export const TextInput: FC<TextInputProps> = ({ onSubmit }) => {
+export const TextInput: FC<TextInputProps> = ({ textOption, onSubmit }) => {
     const [text, setText] = useState("");
+    const [customValue, setCustomValue] = useState("");
 
     return (
         <div className="text-input ui-card">
@@ -15,6 +18,20 @@ export const TextInput: FC<TextInputProps> = ({ onSubmit }) => {
                 Вставте абзац або кілька речень для аналізу.
             </p>
 
+            {textOption === "custom" && (
+                <div className="text-input__custom">
+                    <label htmlFor="customValue">Символи для пошуку</label>
+                    <input
+                        id="customValue"
+                        className="text-input__custom-input"
+                        type="text"
+                        value={customValue}
+                        onChange={(e) => setCustomValue(e.target.value)}
+                        placeholder="Наприклад: а б !"
+                    />
+                </div>
+            )}
+
             <textarea
                 className="text-input__textarea"
                 value={text}
@@ -22,7 +39,10 @@ export const TextInput: FC<TextInputProps> = ({ onSubmit }) => {
                 placeholder="Введіть текст..."
             />
 
-            <button className="ui-button" onClick={() => onSubmit(text)}>
+            <button
+                className="ui-button"
+                onClick={() => onSubmit(text, customValue)}
+            >
                 Аналізувати
             </button>
         </div>

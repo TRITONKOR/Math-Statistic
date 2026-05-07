@@ -10,6 +10,10 @@ import {
     emptyResult,
 } from "../utils/helper";
 
+function escapeRegExp(value: string): string {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 export function processNumbers(input: string): StatisticsResult {
     const numbers = input
         .split(/\s+/)
@@ -49,7 +53,7 @@ function createMetrics(data: number[]): Metrics {
         }
     });
 
-    const modes = Array.from(freqMap.entries())
+    const modes: number[] = Array.from(freqMap.entries())
         .filter(([_, freq]) => freq === maxFreq)
         .map(([num]) => num);
 
@@ -130,24 +134,37 @@ export function processText(
 
         case "sentenceLength":
             data = input
-                .split(/[.!?]+/)
+                .split(/(?<=[.!?])\s+(?=[А-ЯІЇЄA-Z])/)
                 .filter(Boolean)
                 .map((s) => s.trim().split(/\s+/).length);
             break;
 
         case "custom":
-            if (!customValue) return emptyResult();
+            if (!customValue?.trim()) return emptyResult();
 
-            const matches = input.match(new RegExp(customValue, "gi"));
-            data = matches ? [matches.length] : [0];
+            data = customValue
+                .trim()
+                .split(/\s+/)
+                .filter(Boolean)
+                .map((token) => {
+                    const pattern = escapeRegExp(token);
+                    const matches = input.match(new RegExp(pattern, "gi"));
+                    return matches ? matches.length : 0;
+                });
             break;
     }
+
+    data.sort((a, b) => a - b);
+
+    const distribution = createDistribution(data);
+
+    const metrics = createMetrics(data);
 
     return {
         variationSeries: data,
 
-        distribution: createEmptyDistribution(),
+        distribution: distribution,
 
-        metrics: emptyMetrics(),
+        metrics: metrics,
     };
 }

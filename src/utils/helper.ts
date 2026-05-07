@@ -2,7 +2,11 @@ import type {
     DistributionTableRow,
     DistributionType,
 } from "../components/Stats/DistributionTable/DistributionTable";
-import type { DistributionData, StatisticsResult } from "../types/statistics";
+import type {
+    DistributionData,
+    Metrics,
+    StatisticsResult,
+} from "../types/statistics";
 
 export function createEmptyDistribution(): DistributionData {
     return {
@@ -14,9 +18,9 @@ export function createEmptyDistribution(): DistributionData {
     };
 }
 
-export function emptyMetrics() {
+export function emptyMetrics(): Metrics {
     return {
-        mode: 0,
+        mode: [],
         median: 0,
         mean: 0,
         variance: 0,

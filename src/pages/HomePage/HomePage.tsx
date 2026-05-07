@@ -24,13 +24,13 @@ export default function Home() {
     const [config, setConfig] = useState<StartOptions | null>(null);
     const [data, setData] = useState<StatisticsResult | null>(null);
 
-    const handleSubmit = (input: string) => {
+    const handleSubmit = (input: string, customValue?: string) => {
         if (!config) return;
 
         const result =
             config.mode === "numbers"
                 ? processNumbers(input)
-                : processText(input, config.textOption);
+                : processText(input, config.textOption, customValue);
 
         setData(result);
     };
@@ -43,7 +43,7 @@ export default function Home() {
         return config.mode === "numbers" ? (
             <NumberInput onSubmit={handleSubmit} />
         ) : (
-            <TextInput onSubmit={handleSubmit} />
+            <TextInput textOption={config.textOption} onSubmit={handleSubmit} />
         );
     }
 
